@@ -1,0 +1,53 @@
+# Opinionated FortiGate compliance rules (regex-based)
+- name: "TLS minimum protocol version >= TLS1.2"
+  pattern: "(?s)config system global.*?set ssl-min-proto-version\s+(TLS1-2|TLS1-3)"
+  advice: "Set: config system global -> set ssl-min-proto-version TLS1-2 (or TLS1-3)."
+
+- name: "FortiAnalyzer logging enabled"
+  pattern: "(?s)config log fortianalyzer setting.*?end"
+  must_include: "set status\s+enable"
+  advice: "Enable FAZ logging: config log fortianalyzer setting -> set status enable"
+
+- name: "Syslog logging enabled"
+  pattern: "(?s)config log syslogd setting.*?end"
+  must_include: "set status\s+enable"
+  advice: "Enable syslog: config log syslogd setting -> set status enable"
+
+- name: "Admin lockout configured"
+  pattern: "(?s)config system global.*?end"
+  must_include: "set admin-lockout-threshold\s+\d+.*?set admin-lockout-duration\s+\d+"
+  advice: "Set lockout threshold/duration in config system global."
+
+- name: "Password policy enabled"
+  pattern: "(?s)config system password-policy.*?end"
+  must_include: "set status\s+enable"
+  advice: "Enable password policy: config system password-policy -> set status enable"
+
+- name: "Two-factor for admin enabled (any)"
+  pattern: "(?s)config system admin.*?end"
+  must_include: "set two-factor\s+enable"
+  severity: "WARN"
+  advice: "Consider enabling two-factor for admin accounts."
+
+- name: "Disable weak management protocols (http/telnet)"
+  pattern: "(?s)config system global.*?end"
+  must_include: "set admin-https\s+enable.*?set admin-http\s+disable.*?set admin-telnet\s+disable"
+  advice: "Disable HTTP/Telnet; use HTTPS/SSH only."
+
+- name: "SSH strong ciphers (advisory)"
+  pattern: "(?s)config system global.*?end"
+  must_include: "set ssh-cipher.*?(aes256|chacha20)"
+  severity: "WARN"
+  advice: "Restrict SSH ciphers to strong suites."
+
+- name: "Log disk quota configured"
+  pattern: "(?s)config log disk setting.*?end"
+  must_include: "set status\s+enable"
+  severity: "WARN"
+  advice: "Enable and size on-box log storage if used."
+
+- name: "SNMP v3 configured (advisory)"
+  pattern: "(?s)config system snmp.*?end"
+  must_include: "set security-level\s+auth\w*priv"
+  severity: "WARN"
+  advice: "Prefer SNMPv3 with authPriv."
