@@ -1,6 +1,6 @@
 # FortiGate Config Compliance Checker 🔒
 
-A lightweight, self-contained **Fortinet FortiGate configuration compliance checker** you can publish on GitHub.
+A lightweight, self-contained **Fortinet FortiGate configuration compliance checker**.
 It scans a FortiGate text backup (e.g., `show full-configuration` or `execute backup config flash`) and reports
 alignment with opinionated best practices (logging, password policy, TLS minimums, lockout thresholds, etc.).
 
@@ -59,6 +59,3 @@ See file comments for examples.
 - This is a **static** linter for text backups. It doesn't guarantee device state.
 - FortiOS syntax evolves; rules here are conservative and generic but may require tuning per version.
 - The sample config is synthetic for demo purposes.
-
-## License
-MIT
